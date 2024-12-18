@@ -11,7 +11,7 @@
       - "genre_clf/server/model/xgb_mgen.pkl"
       - "genre_clf/server/templates/index.html"
       - "genre_clf/server/templates/result.html"
-       
+
   tasks:
     - name: Ensure the target directory exists
       ansible.builtin.file:
@@ -28,11 +28,13 @@
       loop: "{{ local_files }}"
 
     - name: Install all requirements
-      ansible.builtin.command:
-        cmd: pip install -r requirements.txt
-        chdir: "{{ remote_dir }}/server"  # Переключаемся на директорию
+      ansible.builtin.shell:
+        cmd: pip install -r {{ remote_dir }}/server/requirements.txt
+      args:
+        warn: false
 
     - name: Start python file
-      ansible.builtin.command:
-        cmd: python3 app.py
-        chdir: "{{ remote_dir }}/server"  # Переключаемся на директорию
+      ansible.builtin.shell:
+        cmd: python3 {{ remote_dir }}/server/app.py
+      args:
+        warn: false
