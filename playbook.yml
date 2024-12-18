@@ -29,12 +29,14 @@
 
     - name: Install all requirements
       ansible.builtin.shell:
-        _raw_params: pip install -r {{ remote_dir }}/server/requirements.txt
+        _raw_params: "pip install -r {{ remote_dir }}/server/requirements.txt"
+        executable: /bin/bash
       args:
         warn: false
 
     - name: Start python file
       ansible.builtin.shell:
-        _raw_params: python3 {{ remote_dir }}/server/app.py
+        _raw_params: "python3 {{ remote_dir }}/server/app.py"
+        executable: /bin/bash
       args:
         warn: false
