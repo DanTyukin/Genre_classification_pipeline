@@ -28,11 +28,11 @@
       loop: "{{ local_files }}"
 
     - name: Install all requirements
-      ansible.builtin.shell:
-        _raw_params: "pip install -r requirements.txt"
-        chdir: "{{ remote_dir }}/server"  # Поменять директорию перед выполнением команды
+      ansible.builtin.command:
+        cmd: pip install -r requirements.txt
+        chdir: "{{ remote_dir }}/server"  # Переключаемся на директорию
 
     - name: Start python file
-      ansible.builtin.shell:
-        _raw_params: "python3 app.py"
-        chdir: "{{ remote_dir }}/server"  # Поменять директорию перед выполнением команды
+      ansible.builtin.command:
+        cmd: python3 app.py
+        chdir: "{{ remote_dir }}/server"  # Переключаемся на директорию
