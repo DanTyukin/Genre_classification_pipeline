@@ -26,23 +26,19 @@
         src: "{{ item }}"
         dest: "{{ remote_dir }}/"
       loop: "{{ local_files }}"
-    
-    - name: Go to the directory genre_clf/server
-      ansible.builtin.shell: 
-        cmd: cd {{ remote_dir}}/server
-        
-    - name: Update files
-      ansible.builtin.shell: 
-        cmd: sudo apt update
-        
-    - name: Install python
-      ansible.builtin.shell: 
-        cmd: sudo apt install python3-pip
-  
-    - name: Install all requirement
-      ansible.builtin.shell:
-      	cmd: pip install -r requirements.txt
 
-    - name: Start python file
+    - name: Update the package list
+      ansible.builtin.shell:
+        cmd: sudo apt update
+
+    - name: Install Python and pip
+      ansible.builtin.shell:
+        cmd: sudo apt install -y python3-pip
+
+    - name: Install all requirements
+      ansible.builtin.shell:
+        cmd: pip3 install -r {{ remote_dir }}/requirements.txt
+
+    - name: Start the Python application
       ansible.builtin.shell:
         cmd: python3 app.py
