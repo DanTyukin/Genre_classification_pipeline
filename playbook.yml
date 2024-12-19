@@ -26,24 +26,11 @@
         src: "{{ item }}"
         dest: "{{ remote_dir }}/"
       loop: "{{ local_files }}"
-
-    - name: Update the package list
-      ansible.builtin.apt:
-        update_cache: yes
-
-    - name: Install Python and pip
-      ansible.builtin.apt:
-        name: 
-          - python3
-          - python3-pip
-        state: present
-
+    
     - name: Install all requirements
       ansible.builtin.shell:
-        _raw_params: "pip3 install -r {{ remote_dir }}/requirements.txt"
-
-    - name: Start the Python application
+        _raw_params: "pip install -r {{ remote_dir }}/server/requirements.txt"
+    
+    - name: Start python file
       ansible.builtin.shell:
-        _raw_params: "python3 app.py"
-        args:
-          chdir: "{{ remote_dir }}"
+        _raw_params: "python3 {{ remote_dir }}/server/app.py"
