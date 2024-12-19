@@ -29,12 +29,12 @@
 
     - name: Install all requirements
       ansible.builtin.shell:
-        cmd: pip3 install -r server/requirements.txt
+        _raw_params: pip3 install -r server/requirements.txt
         args:
           chdir: "{{ remote_dir }}"
 
     - name: Start python file
       ansible.builtin.shell:
-        cmd: python3 server/app.py
+        _raw_params: python3 server/app.py
         args:
           chdir: "{{ remote_dir }}"
