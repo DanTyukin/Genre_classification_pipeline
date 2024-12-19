@@ -26,13 +26,15 @@
         src: "{{ item }}"
         dest: "{{ remote_dir }}/"
       loop: "{{ local_files }}"
-    
+
     - name: Install all requirements
-      ansible.builtin.shell: pip3 install -r server/requirements.txt
+      ansible.builtin.shell:
+        cmd: pip3 install -r server/requirements.txt
         args:
           chdir: "{{ remote_dir }}"
-        
+
     - name: Start python file
-      ansible.builtin.shell: python3 server/app.py
+      ansible.builtin.shell:
+        cmd: python3 server/app.py
         args:
           chdir: "{{ remote_dir }}"
