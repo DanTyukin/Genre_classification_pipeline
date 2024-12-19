@@ -13,13 +13,6 @@
       - "genre_clf/server/templates/result.html"
        
   tasks:
-    - name: Ensure Python and pip are installed
-      ansible.builtin.package:
-        name: 
-          - python3
-          - python3-pip
-        state: present
-
     - name: Ensure the target directory exists
       ansible.builtin.file:
         path: "{{ remote_dir }}"
@@ -34,10 +27,22 @@
         dest: "{{ remote_dir }}/"
       loop: "{{ local_files }}"
     
-    - name: Install all requirements
+    - name: Go to the directory genre_clf/server
+      ansible.builtin.shell: 
+        cmd: cd {{ remote_dir}}/server
+        
+    - name: Update files
+      ansible.builtin.shell: 
+        cmd: sudo apt update
+        
+    - name: Install python
+      ansible.builtin.shell: 
+        cmd: sudo apt install python3-pip
+  
+    - name: Install all requirement
       ansible.builtin.shell:
-        _raw_params: "pip3 install -r {{ remote_dir }}/requirements.txt"
-    
+      	cmd: pip install -r requirements.txt
+
     - name: Start python file
       ansible.builtin.shell:
-        _raw_params: "python3 {{ remote_dir }}/app.py"
+        cmd: python3 app.py
