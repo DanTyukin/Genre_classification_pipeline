@@ -13,6 +13,13 @@
       - "genre_clf/server/templates/result.html"
        
   tasks:
+    - name: Ensure Python and pip are installed
+      ansible.builtin.package:
+        name: 
+          - python3
+          - python3-pip
+        state: present
+
     - name: Ensure the target directory exists
       ansible.builtin.file:
         path: "{{ remote_dir }}"
@@ -29,8 +36,8 @@
     
     - name: Install all requirements
       ansible.builtin.shell:
-        _raw_params: "pip install -r {{ remote_dir }}/server/requirements.txt"
+        _raw_params: "pip3 install -r {{ remote_dir }}/requirements.txt"
     
     - name: Start python file
       ansible.builtin.shell:
-        _raw_params: "python3 {{ remote_dir }}/server/app.py"
+        _raw_params: "python3 {{ remote_dir }}/app.py"
