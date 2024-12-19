@@ -1,18 +1,19 @@
+---
 - name: Deployment of Genre Classification application
   hosts: all
   become: yes
   vars:
     remote_dir: "/home/ubuntu/genre_clf"
     local_files:
-      - "genre_clf/server/requirements.txt"
-      - "genre_clf/server/app.py"
-      - "genre_clf/server/utils/feature_extraction.py"
-      - "genre_clf/server/model/min_max_scaler.pkl"
-      - "genre_clf/server/model/xgb_mgen.pkl"
-      - "genre_clf/server/templates/index.html"
-      - "genre_clf/server/templates/result.html"
-       
+      - "server/requirements.txt"
+      - "server/app.py"
+      - "server/utils/feature_extraction.py"
+      - "server/model/min_max_scaler.pkl"
+      - "server/model/xgb_mgen.pkl"
+      - "server/templates/index.html"
+      - "server/templates/result.html"
   tasks:
+
     - name: Ensure the target directory exists
       ansible.builtin.file:
         path: "{{ remote_dir }}"
@@ -27,12 +28,25 @@
         dest: "{{ remote_dir }}/"
       loop: "{{ local_files }}"
 
-    - name: Install all requirements
-      ansible.builtin.shell:
-        _raw_params: pip3 install -r server/requirements.txt
-        chdir: "{{ remote_dir }}"
+    - name: Update
+      ansible.builtin.shell: 
+        cmd: sudo apt update
+        
+    - name: Install python
+      ansible.builtin.shell: 
+        cmd: sudo apt install --yes --force-yes python3-pip
 
-    - name: Start python file
+    - name: Install all requirement
+      ansible.builtin.shell: 
+        cmd: pip install -r genre_clf/requirements.txt
+
+    - name: Start python server asynchronously
       ansible.builtin.shell:
-        _raw_params: python3 server/app.py
-        chdir: "{{ remote_dir }}"
+        cmd: "python3 /home/ubuntu/genre_clf/app.py"
+      async: 3600  # Maximum running time (1 hour)
+      poll: 0      # Do not wait for completion, continue with next tasks
+      register: python_output
+
+    - name: Print the website link
+      ansible.builtin.debug:
+        msg: "You can access the application at: http://{{ ansible_host }}:5000/"
